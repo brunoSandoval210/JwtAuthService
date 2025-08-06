@@ -12,6 +12,9 @@ COPY ./pom.xml /root
 COPY ./.mvn /root/.mvn
 COPY ./mvnw /root
 
+# Dar permisos de ejecución al mvnw
+RUN chmod +x mvnw
+
 #Descargar las dependencias
 RUN ./mvnw dependency:go-offline
 

@@ -1,0 +1,44 @@
+version: "3.9"
+services:
+
+  spring-api-image:
+    image: spring-security-jwt-image
+    container_name: spring-api-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-network
+    depends_on:
+      - postgres
+    #Variables de entorno del backend
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/spring_security_jwt
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: admin
+      PRIVATE_KEY: qFCq4CWUwOK25mN/IwiORnoMXBcCR6TfBzlX7Y+YOoo=
+      JWT_USER_GENERATOR: AUTHJWT-BACKEND
+      JWT_EXPIRE: 1800000
+
+  postgres:
+    image: postgres
+    container_name: postgres_database
+    # Variables de entorno para la base de datos
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: spring_security_jwt
+    ports:
+      - "5432:5432" # o "5433:5432" si ya usas 5432 localmente
+    networks:
+      - spring-network
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data
+
+networks:
+  spring-network:
+
+volumes:
+  postgres-volume:

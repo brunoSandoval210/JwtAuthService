@@ -32,6 +32,10 @@ import org.springframework.http.HttpHeaders;
                 @Server(
                         description = "Development Server",
                         url = "http://localhost:8080"
+                ),
+                @Server(
+                        description = "Production Server",
+                        url = "https://jwtauthservice.onrender.com/"
                 )
         },
         security = @SecurityRequirement(

@@ -1,8 +1,8 @@
-package com.apirest.JwtAuthService.util.exception;
+package com.apirest.JwtAuthService.util;
 
 public record ErrorResponse (
         String error,
         String message,
-        boolean success
+        int status
 ){
 }

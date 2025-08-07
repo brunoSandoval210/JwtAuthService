@@ -1,4 +1,4 @@
-package com.apirest.JwtAuthService.controller.dtos;
+package com.apirest.JwtAuthService.controller.dtos.user;
 
 import java.util.List;
 

@@ -1,30 +1,42 @@
 package com.apirest.JwtAuthService.config;
 
-import com.apirest.JwtAuthService.services.UserDetailServiceImpl;
+import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
+import com.apirest.JwtAuthService.services.impl.UserDetailServiceImpl;
+import com.apirest.JwtAuthService.util.ErrorResponse;
+import com.apirest.JwtAuthService.util.JwtAuthEntryPoint;
 import com.apirest.JwtAuthService.util.JwtUtils;
 import com.apirest.JwtAuthService.util.filter.JwtTokenGenerator;
 import com.apirest.JwtAuthService.util.filter.JwtTokenValidator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
@@ -34,11 +46,16 @@ public class SecurityConfig {
 
     private final JwtUtils jwtUtils;
     private final UserDetailServiceImpl userDetailService;
+    private final JwtAuthEntryPoint unauthorizedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(unauthorizedHandler)
+                        .accessDeniedHandler(accessDeniedHandler())
+                )
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -51,7 +68,7 @@ public class SecurityConfig {
                             "/swagger-ui.html",
                             "/swagger-resources/**",
                             "/webjars/**"
-                    ).permitAll();
+                    ).permitAll().anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtTokenValidator(), BasicAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenGenerator(), BasicAuthenticationFilter.class)
@@ -89,7 +106,8 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-                "https://jwtauthservice.onrender.com"
+                "https://jwtauthservice.onrender.com",
+                "http://localhost:8080"
         ));        configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE"
         ));
@@ -109,4 +127,21 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            ErrorResponse errorResponse = new ErrorResponse(
+                    ErrorCodeEnum.INSUFFICIENT_PERMISSIONS.name(),
+                    "No tienes los permisos necesarios para acceder a este recurso",
+                    ErrorCodeEnum.INSUFFICIENT_PERMISSIONS.getCode()
+            );
+
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            new ObjectMapper().writeValue(response.getWriter(), errorResponse);
+        };
+    }
+
+
 }

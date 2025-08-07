@@ -1,7 +1,8 @@
-package com.apirest.JwtAuthService.services;
+package com.apirest.JwtAuthService.services.impl;
 
 import com.apirest.JwtAuthService.persistence.entity.User;
 import com.apirest.JwtAuthService.persistence.repository.UserRepository;
+import com.apirest.JwtAuthService.services.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +24,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("El usuario " + username +" no fue encontrado"));
+                () -> new UserNotFoundException(username));
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 

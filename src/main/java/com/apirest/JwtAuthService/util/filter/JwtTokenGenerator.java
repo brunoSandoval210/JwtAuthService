@@ -1,10 +1,12 @@
 package com.apirest.JwtAuthService.util.filter;
 
-import com.apirest.JwtAuthService.controller.dtos.AuthLoginRequest;
-import com.apirest.JwtAuthService.controller.dtos.AuthResponse;
-import com.apirest.JwtAuthService.services.UserDetailServiceImpl;
+import com.apirest.JwtAuthService.controller.dtos.auth.AuthLoginRequest;
+import com.apirest.JwtAuthService.controller.dtos.auth.AuthResponse;
+import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
+import com.apirest.JwtAuthService.services.exception.UserNotFoundException;
+import com.apirest.JwtAuthService.services.impl.UserDetailServiceImpl;
 import com.apirest.JwtAuthService.util.JwtUtils;
-import com.apirest.JwtAuthService.util.exception.ErrorResponse;
+import com.apirest.JwtAuthService.util.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -59,15 +63,12 @@ public class JwtTokenGenerator extends OncePerRequestFilter {
                     response.setStatus(HttpServletResponse.SC_OK);
 
                     new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-                }
-                catch (AuthenticationException e){
-                    String message = e instanceof BadCredentialsException ?
-                            "Usuario o contraseña incorrectos" :
-                            "Error de autenticación";
-                    sendErrorResponse(response, message, e.getMessage());
-                }
-                catch (Exception e) {
-                    sendErrorResponse(response, "Error interno", e.getMessage());
+                } catch (BadCredentialsException e) {
+                    sendErrorResponse(response, ErrorCodeEnum.BAD_CREDENTIALS, e.getMessage());
+                } catch (UserNotFoundException e) {
+                    sendErrorResponse(response, ErrorCodeEnum.USER_NOT_FOUND, e.getMessage());
+                } catch (Exception e) {
+                    sendErrorResponse(response, ErrorCodeEnum.INTERNAL_SERVER_ERROR, e.getMessage());
                 }
             } else {
                 filterChain.doFilter(request, response);
@@ -88,14 +89,29 @@ public class JwtTokenGenerator extends OncePerRequestFilter {
                 userDetails.getAuthorities());
     }
 
-    private void sendErrorResponse(HttpServletResponse response, String errorTitle, String message) throws IOException {
+    private void sendErrorResponse(HttpServletResponse response, ErrorCodeEnum errorCode, String detail)
+            throws IOException {
+
         ErrorResponse errorResponse = new ErrorResponse(
-                    errorTitle,
-                    message,
-                    false
-                );
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                errorCode.name(),
+                detail,
+                errorCode.getCode()
+        );
+
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(determineHttpStatus(errorCode).value());
         new ObjectMapper().writeValue(response.getOutputStream(), errorResponse);
     }
+
+    private HttpStatus determineHttpStatus(ErrorCodeEnum errorCode) {
+        return switch (errorCode) {
+            case ACCESS_DENIED -> HttpStatus.FORBIDDEN;
+            case INVALID_TOKEN, EXPIRED_TOKEN, BAD_CREDENTIALS -> HttpStatus.UNAUTHORIZED;
+            case USER_NOT_FOUND, INVALID_ROLES -> HttpStatus.NOT_FOUND;
+            case USER_ALREADY_EXISTS -> HttpStatus.CONFLICT;
+            case INVALID_REQUEST, MISSING_REQUIRED_FIELDS -> HttpStatus.BAD_REQUEST;
+            default -> HttpStatus.INTERNAL_SERVER_ERROR;
+        };
+    }
+
 }

@@ -1,15 +1,14 @@
 package com.apirest.JwtAuthService.controller.rest;
 
-import com.apirest.JwtAuthService.controller.dtos.UserReponse;
-import com.apirest.JwtAuthService.services.UserService;
+import com.apirest.JwtAuthService.controller.dtos.user.UserCreateRequest;
+import com.apirest.JwtAuthService.controller.dtos.user.UserReponse;
+import com.apirest.JwtAuthService.services.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +30,23 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN','USER') and hasAuthority('READ')")
     public ResponseEntity<List<UserReponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
+    }
+
+    @PreAuthorize(("hasAnyRole('ADMIN','USER') and hasAuthority('READ')"))
+    @GetMapping("/{username}")
+    public ResponseEntity<UserReponse> getFindByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getFindByUsername(username));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('CREATE')")
+    @PostMapping
+    public ResponseEntity<UserReponse> saveUser(@RequestBody UserCreateRequest userCreateRequest) {
+        return ResponseEntity.ok(userService.saveUser(userCreateRequest));
+    }
+
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('DELETE')")
+    @DeleteMapping("/{username}")
+    public ResponseEntity<String> deleteUser(@PathVariable String username) {
+        return ResponseEntity.ok(userService.deleteUser(username));
     }
 }

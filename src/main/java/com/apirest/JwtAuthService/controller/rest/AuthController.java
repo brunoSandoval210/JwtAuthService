@@ -1,7 +1,7 @@
 package com.apirest.JwtAuthService.controller.rest;
 
-import com.apirest.JwtAuthService.controller.dtos.AuthLoginRequest;
-import com.apirest.JwtAuthService.controller.dtos.AuthResponse;
+import com.apirest.JwtAuthService.controller.dtos.auth.AuthLoginRequest;
+import com.apirest.JwtAuthService.controller.dtos.auth.AuthResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

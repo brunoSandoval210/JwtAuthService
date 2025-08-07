@@ -1,4 +1,4 @@
-package com.apirest.JwtAuthService.controller.dtos;
+package com.apirest.JwtAuthService.controller.dtos.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

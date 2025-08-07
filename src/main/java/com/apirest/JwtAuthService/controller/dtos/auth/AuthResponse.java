@@ -1,4 +1,4 @@
-package com.apirest.JwtAuthService.controller.dtos;
+package com.apirest.JwtAuthService.controller.dtos.auth;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 

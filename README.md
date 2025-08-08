@@ -1,20 +1,66 @@
-JWTAuthService es un proyecto backend desarrollado con Spring Boot que implementa un sistema de autenticación y autorización segura mediante JWT (JSON Web Tokens).
+# 🛡️ JWTAuthService
 
-Su propósito es demostrar el uso de Spring Security junto con JWT para proteger rutas, gestionar el acceso y mantener sesiones sin estado (stateless), siguiendo buenas prácticas en el desarrollo de APIs RESTful.
+**JWTAuthService** es un proyecto backend desarrollado con **Spring Boot 3** y **Java 21** que implementa un sistema de autenticación y autorización segura mediante **JWT (JSON Web Tokens)** y **Spring Security**.  
 
-Incluye funcionalidades como registro de usuarios, inicio de sesión, CRUD de usuarios autenticados, documentación interactiva con Swagger, y un mecanismo global de manejo de excepciones personalizadas implementado con @RestControllerAdvice, lo que permite retornar respuestas consistentes y con mensajes claros ante errores de validación o de negocio.
+Incluye funcionalidades de **registro de usuarios, inicio de sesión, CRUD de usuarios autenticados**, documentación interactiva con **Swagger**, y un **manejador global de excepciones personalizadas** usando `@RestControllerAdvice`.
 
-Este proyecto está pensado como una base reutilizable para aplicaciones más complejas que requieran autenticación basada en tokens y un control robusto de errores.
+---
 
-🎯 Objetivos del proyecto
-Proteger endpoints con Spring Security y JWT.
+## 🚀 Características principales
 
-Implementar endpoints públicos (login, registro) y protegidos (gestión de usuarios).
+- 🔐 **Autenticación segura con JWT**.
+- 👥 Registro, login y gestión de usuarios.
+- 🛡️ Endpoints públicos y protegidos con control de acceso.
+- 📚 Documentación interactiva con **Swagger UI**.
+- ⚠️ Manejo global de excepciones personalizadas con `@RestControllerAdvice`.
+- 🗄️ Persistencia con **PostgreSQL** y **Spring Data JPA**.
+- 🏗️ Arquitectura en capas (Controller, Service, Repository, DTO).
 
-Ofrecer un CRUD de usuarios autenticados.
+---
 
-Documentar la API con Swagger UI.
+## 📦 Tecnologías utilizadas
 
-Manejar errores globalmente con @RestControllerAdvice para excepciones personalizadas.
+- **Java 21**
+- **Spring Boot 3**
+- **Spring Security**
+- **JWT (jjwt / java-jwt)**
+- **Spring Data JPA**
+- **PostgreSQL**
+- **Swagger / OpenAPI**
+- **Lombok**
 
-Aplicar arquitectura en capas (controlador, servicio, repositorio, DTOs) siguiendo buenas prácticas.
+---
+
+## 📋 Requisitos previos
+
+Antes de iniciar, asegúrate de tener instalado:
+
+- [Java 21](https://adoptium.net/)
+- [Maven](https://maven.apache.org/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Git](https://git-scm.com/)
+
+---
+
+## ⚙️ Configuración de variables de entorno
+
+El proyecto utiliza variables de entorno para la configuración sensible. Debes definir las siguientes antes de iniciar la aplicación:
+
+| Variable             | Descripción                                           | Ejemplo                                   |
+|----------------------|-------------------------------------------------------|-------------------------------------------|
+| `DATABASE_URL`       | URL de conexión JDBC a PostgreSQL                     | `jdbc:postgresql://localhost:5432/jwtdb` |
+| `DATABASE_USERNAME`  | Usuario de la base de datos                           | `postgres`                               |
+| `DATABASE_PASSWORD`  | Contraseña de la base de datos                        | `admin123`                               |
+| `PRIVATE_KEY`        | Clave privada para firmar los JWT                     | `qFCq4CWUwOK25mN/IwiORnoMXBcCR6TfBzlX7Y+YOoo=` |
+| `JWT_USER_GENERATOR` | Identificador del generador de tokens (issuer)        | `JwtAuthService`                         |
+| `JWT_EXPIRE`         | Tiempo de expiración del token en milisegundos        | `3600000`                                |
+
+Ejemplo en Linux/Mac:
+
+```bash
+export DATABASE_URL=jdbc:postgresql://localhost:5432/jwtdb
+export DATABASE_USERNAME=postgres
+export DATABASE_PASSWORD=admin123
+export PRIVATE_KEY=qFCq4CWUwOK25mN/IwiORnoMXBcCR6TfBzlX7Y+YOoo=
+export JWT_USER_GENERATOR=JwtAuthService
+export JWT_EXPIRE=3600000

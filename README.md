@@ -107,9 +107,10 @@ o
 
 ## 👥 Usuarios de prueba
 La base de datos se inicializa con dos usuarios para realizar pruebas de autenticación:
-
+```
 BrunoUser	1234	ROLE_USER
 BrunoAdmin	1234	ROLE_ADMIN
+```
 
 Estos usuarios pueden utilizarse para probar el flujo de login (/auth/login) y acceder a los endpoints protegidos según sus permisos.
 

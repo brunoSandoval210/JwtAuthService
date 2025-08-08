@@ -48,7 +48,7 @@ El proyecto requiere las siguientes variables:
 ### Configuración por Sistema Operativo
 
 **Linux/Mac:**
-```bash
+```bash```
 export DATABASE_URL=jdbc:postgresql://localhost:5432/jwtdb
 export DATABASE_USERNAME=postgres
 export DATABASE_PASSWORD=admin123

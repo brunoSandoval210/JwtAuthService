@@ -48,14 +48,14 @@ El proyecto requiere las siguientes variables:
 ### Configuración por Sistema Operativo
 
 **Linux/Mac:**
-```bash```
+```
 export DATABASE_URL=jdbc:postgresql://localhost:5432/jwtdb
 export DATABASE_USERNAME=postgres
 export DATABASE_PASSWORD=admin123
 export PRIVATE_KEY=qFCq4CWUwOK25mN/IwiORnoMXBcCR6TfBzlX7Y+YOoo=
 export JWT_USER_GENERATOR=JwtAuthService
 export JWT_EXPIRE=3600000
-
+```
 ##Ejemplo en Windows (PowerShell):
 setx DATABASE_URL "jdbc:postgresql://localhost:5432/jwtdb"
 setx DATABASE_USERNAME "postgres"

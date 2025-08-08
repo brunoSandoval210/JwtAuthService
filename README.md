@@ -75,13 +75,13 @@ setx JWT_EXPIRE "3600000"
 
 ---
 
-🛠️ Instalación y ejecución
+## 🛠️ Instalación y ejecución
 
 ## Clonar el repositorio
 
-git clone https://github.com/tuusuario/JWTAuthService.git
-cd JWTAuthService
-Configurar la base de datos
+- git clone https://github.com/tuusuario/JWTAuthService.git
+- cd JWTAuthService
+- Configurar la base de datos
 
 ## Crea una base de datos en PostgreSQL:
 

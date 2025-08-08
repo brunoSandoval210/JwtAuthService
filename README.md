@@ -160,5 +160,7 @@ El proyecto implementa un manejador global de excepciones personalizadas usando 
 - Rotación automática de secretos
 - Esquema de roles y permisos:
 
+## 🔐 Diagrama de Arquitectura de Seguridad
+
 <img width="1746" height="793" alt="Captura de pantalla 2025-08-07 202815" src="https://github.com/user-attachments/assets/5983788c-cfeb-48a8-81c0-7c779d350264" />
 

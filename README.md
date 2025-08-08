@@ -56,38 +56,44 @@ export PRIVATE_KEY=qFCq4CWUwOK25mN/IwiORnoMXBcCR6TfBzlX7Y+YOoo=
 export JWT_USER_GENERATOR=JwtAuthService
 export JWT_EXPIRE=3600000
 ```
-##Ejemplo en Windows (PowerShell):
+
+**Ejemplo en Windows (PowerShell):**
+
+```
 setx DATABASE_URL "jdbc:postgresql://localhost:5432/jwtdb"
 setx DATABASE_USERNAME "postgres"
 setx DATABASE_PASSWORD "admin123"
 setx PRIVATE_KEY "qFCq4CWUwOK25mN/IwiORnoMXBcCR6TfBzlX7Y+YOoo="
 setx JWT_USER_GENERATOR "JwtAuthService"
 setx JWT_EXPIRE "3600000"
+```
 
 ---
 
 ## 🛠️ Instalación y ejecución
 
-## Clonar el repositorio
-
+**Clonar el repositorio**
+```
 - git clone https://github.com/tuusuario/JWTAuthService.git
 - cd JWTAuthService
 - Configurar la base de datos
+```
 
-## Crea una base de datos en PostgreSQL:
+**Crea una base de datos en PostgreSQL:**
 
+```
 CREATE DATABASE jwtdb;
 Asegúrate de que el usuario y contraseña coincidan con las variables de entorno.
-
-## Configurar variables de entorno
-
+```
+**Configurar variables de entorno**
+```
 Define las variables indicadas en la sección anterior.
-
-## Compilar y ejecutar el proyecto
-
+```
+**Compilar y ejecutar el proyecto**
+```
 mvn clean install
 mvn spring-boot:run
-
+```
 ---
 
 ## Acceder a la documentación de la API

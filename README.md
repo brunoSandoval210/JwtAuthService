@@ -119,3 +119,46 @@ Estos usuarios pueden utilizarse para probar el flujo de login (/auth/login) y a
 ---
 ## 🛡️ Manejo de excepciones
 El proyecto implementa un manejador global de excepciones personalizadas usando @RestControllerAdvice, lo que asegura respuestas consistentes y mensajes claros en errores de validación, autenticación o reglas de negocio.
+
+---
+## 🔄 Flujo de Autenticación
+
+**🛡️ Security Filter Chain**
+
+### Filtros Principales
+1. **Filter 1** - Filtro inicial de seguridad
+2. **Filter 2** - Validación de cabeceras HTTP
+3. **Filter 3** - Filtro de autenticación básica
+4. **DelightingFilterProxy** - Proxy para filtros personalizados
+5. **3x4T7kev0idubcter** - Filtro de identificación de usuario
+6. **3x4T7kev6lavorcter** - Filtro de autorización de recursos
+
+**⚙️ Componentes Centrales**
+
+### ActiveFixation Manager
+- **ActiveFixation Provider**:
+  - Gestiona la autenticación activa
+  - Procesa tokens JWT
+  - Administra sesiones seguras
+
+- **UserServiceDetails**:
+  - Implementa `UserDetailsService`
+  - Carga usuarios desde la base de datos
+  - Gestiona autoridades/permisos
+
+**SecureFixation Provider**
+- **Device Usage**:
+  - Control de dispositivos autorizados
+  - Validación de fingerprints
+  - Protección contra replay attacks
+
+**🗃️ Capa de Datos**
+
+### Database Security
+- Encriptación de credenciales (BCrypt)
+- Auditoría de accesos
+- Rotación automática de secretos
+- Esquema de roles y permisos:
+
+<img width="1746" height="793" alt="Captura de pantalla 2025-08-07 202815" src="https://github.com/user-attachments/assets/5983788c-cfeb-48a8-81c0-7c779d350264" />
+

@@ -123,38 +123,38 @@ El proyecto implementa un manejador global de excepciones personalizadas usando 
 ---
 ## 🔄 Flujo de Autenticación
 
-**🛡️ Security Filter Chain**
+### 🛡️ Security Filter Chain
 
-### Filtros Principales
-1. **Filter 1** - Filtro inicial de seguridad
-2. **Filter 2** - Validación de cabeceras HTTP
-3. **Filter 3** - Filtro de autenticación básica
-4. **DelightingFilterProxy** - Proxy para filtros personalizados
-5. **3x4T7kev0idubcter** - Filtro de identificación de usuario
-6. **3x4T7kev6lavorcter** - Filtro de autorización de recursos
+ **Filtros Principales**
+1. ***Filter 1*** - Filtro inicial de seguridad
+2. ***Filter 2*** - Validación de cabeceras HTTP
+3. ***Filter 3*** - Filtro de autenticación básica
+4. ***DelightingFilterProxy*** - Proxy para filtros personalizados
+5. ***3x4T7kev0idubcter*** - Filtro de identificación de usuario
+6. ***3x4T7kev6lavorcter*** - Filtro de autorización de recursos
 
-**⚙️ Componentes Centrales**
+### Componentes Centrales
 
-### ActiveFixation Manager
-- **ActiveFixation Provider**:
+**ActiveFixation Manager**
+- ***ActiveFixation Provider***
   - Gestiona la autenticación activa
   - Procesa tokens JWT
   - Administra sesiones seguras
 
-- **UserServiceDetails**:
+- ***UserServiceDetails***
   - Implementa `UserDetailsService`
   - Carga usuarios desde la base de datos
   - Gestiona autoridades/permisos
 
 **SecureFixation Provider**
-- **Device Usage**:
+- ***Device Usage***:
   - Control de dispositivos autorizados
   - Validación de fingerprints
   - Protección contra replay attacks
 
-**🗃️ Capa de Datos**
+### 🗃️ Capa de Datos
 
-### Database Security
+**Database Security**
 - Encriptación de credenciales (BCrypt)
 - Auditoría de accesos
 - Rotación automática de secretos

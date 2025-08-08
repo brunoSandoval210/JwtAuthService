@@ -56,7 +56,7 @@ El proyecto utiliza variables de entorno para la configuración sensible. Debes 
 | `JWT_EXPIRE`         | Tiempo de expiración del token en milisegundos        | `3600000`                                |
 
 
-##Ejemplo en Linux/Mac:
+## Ejemplo en Linux/Mac:
 
 export DATABASE_URL=jdbc:postgresql://localhost:5432/jwtdb
 export DATABASE_USERNAME=postgres
@@ -77,29 +77,29 @@ setx JWT_EXPIRE "3600000"
 
 🛠️ Instalación y ejecución
 
-##Clonar el repositorio
+## Clonar el repositorio
 
 git clone https://github.com/tuusuario/JWTAuthService.git
 cd JWTAuthService
 Configurar la base de datos
 
-##Crea una base de datos en PostgreSQL:
+## Crea una base de datos en PostgreSQL:
 
 CREATE DATABASE jwtdb;
 Asegúrate de que el usuario y contraseña coincidan con las variables de entorno.
 
-##Configurar variables de entorno
+## Configurar variables de entorno
 
 Define las variables indicadas en la sección anterior.
 
-##Compilar y ejecutar el proyecto
+## Compilar y ejecutar el proyecto
 
 mvn clean install
 mvn spring-boot:run
 
 ---
 
-##Acceder a la documentación de la API
+## Acceder a la documentación de la API
 
 Swagger UI estará disponible en:
 👉 http://localhost:8080/swagger-ui.html

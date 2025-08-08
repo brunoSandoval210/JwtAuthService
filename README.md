@@ -1,63 +1,54 @@
-# 🛡️ JWTAuthService
+# 🛡️ JWTAuthService - Sistema de Autenticación JWT con Spring Boot
 
-**JWTAuthService** es un proyecto backend desarrollado con **Spring Boot 3** y **Java 21** que implementa un sistema de autenticación y autorización segura mediante **JWT (JSON Web Tokens)** y **Spring Security**.  
+**JWTAuthService** es un proyecto backend desarrollado con **Spring Boot 3** y **Java 21** que implementa un sistema seguro de autenticación y autorización mediante **JWT** y **Spring Security 6**.
 
-Incluye funcionalidades de **registro de usuarios, inicio de sesión, CRUD de usuarios autenticados**, documentación interactiva con **Swagger**, y un **manejador global de excepciones personalizadas** usando `@RestControllerAdvice`.
+![Java](https://img.shields.io/badge/Java-21-%23ED8B00?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-%236DB33F?logo=spring)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-%23316192?logo=postgresql)
 
----
+## 🌟 Características Principales
 
-## 🚀 Características principales
+- 🔐 Autenticación segura con **JWT** (tokens de acceso)
+- 👨‍💻 Gestión de usuarios con roles (**USER**, **ADMIN**)
+- 🛡️ Endpoints protegidos con `@PreAuthorize`
+- 📊 Documentación interactiva con **Swagger UI**
+- ⚠️ Manejo global de excepciones con `@RestControllerAdvice`
+- 🗃️ Persistencia con **PostgreSQL** y **Spring Data JPA**
+- 🏗️ Arquitectura en capas (Controller-Service-Repository)
 
-- 🔐 **Autenticación segura con JWT**.
-- 👥 Registro, login y gestión de usuarios.
-- 🛡️ Endpoints públicos y protegidos con control de acceso.
-- 📚 Documentación interactiva con **Swagger UI**.
-- ⚠️ Manejo global de excepciones personalizadas con `@RestControllerAdvice`.
-- 🗄️ Persistencia con **PostgreSQL** y **Spring Data JPA**.
-- 🏗️ Arquitectura en capas (Controller, Service, Repository, DTO).
+## 🛠️ Tecnologías Utilizadas
 
----
+| Categoría       | Tecnologías                                                                 |
+|-----------------|-----------------------------------------------------------------------------|
+| **Backend**     | Spring Boot 3, Spring Security 6, Spring Data JPA                           |
+| **Base Datos**  | PostgreSQL 15                                                               |
+| **Seguridad**   | JWT (jjwt), BCryptPasswordEncoder                                          |
+| **Herramientas**| Lombok, MapStruct, OpenAPI 3, Swagger UI                                   |
 
-## 📦 Tecnologías utilizadas
+## 📋 Requisitos Previos
 
-- **Java 21**
-- **Spring Boot 3**
-- **Spring Security**
-- **JWT (jjwt / java-jwt)**
-- **Spring Data JPA**
-- **PostgreSQL**
-- **Swagger / OpenAPI**
-- **Lombok**
-
----
-
-## 📋 Requisitos previos
-
-Antes de iniciar, asegúrate de tener instalado:
-
-- [Java 21](https://adoptium.net/)
-- [Maven](https://maven.apache.org/)
-- [PostgreSQL](https://www.postgresql.org/)
+- [JDK 21](https://adoptium.net/)
+- [Maven 3.9+](https://maven.apache.org/)
+- [PostgreSQL 15+](https://www.postgresql.org/)
 - [Git](https://git-scm.com/)
 
----
+## ⚙️ Configuración de Variables de Entorno
 
-## ⚙️ Configuración de variables de entorno
+El proyecto requiere las siguientes variables:
 
-El proyecto utiliza variables de entorno para la configuración sensible. Debes definir las siguientes antes de iniciar la aplicación:
+| Variable             | Descripción                                | Ejemplo                                   |
+|----------------------|--------------------------------------------|-------------------------------------------|
+| `DATABASE_URL`       | URL de conexión JDBC                       | `jdbc:postgresql://localhost:5432/jwtdb` |
+| `DATABASE_USERNAME`  | Usuario de PostgreSQL                      | `postgres`                               |
+| `DATABASE_PASSWORD`  | Contraseña de PostgreSQL                   | `admin123`                               |
+| `PRIVATE_KEY`        | Clave secreta para JWT (Base64)            | `qFCq4CWUwOK25mN/IwiORnoMXBcCR6TfBzlX7Y+YOoo=` |
+| `JWT_USER_GENERATOR` | Emisor del token                           | `JwtAuthService`                         |
+| `JWT_EXPIRE`         | Expiración del token (ms)                  | `3600000` (1 hora)                       |
 
-| Variable             | Descripción                                           | Ejemplo                                   |
-|----------------------|-------------------------------------------------------|-------------------------------------------|
-| `DATABASE_URL`       | URL de conexión JDBC a PostgreSQL                     | `jdbc:postgresql://localhost:5432/jwtdb` |
-| `DATABASE_USERNAME`  | Usuario de la base de datos                           | `postgres`                               |
-| `DATABASE_PASSWORD`  | Contraseña de la base de datos                        | `admin123`                               |
-| `PRIVATE_KEY`        | Clave privada para firmar los JWT                     | `qFCq4CWUwOK25mN/IwiORnoMXBcCR6TfBzlX7Y+YOoo=` |
-| `JWT_USER_GENERATOR` | Identificador del generador de tokens (issuer)        | `JwtAuthService`                         |
-| `JWT_EXPIRE`         | Tiempo de expiración del token en milisegundos        | `3600000`                                |
+### Configuración por Sistema Operativo
 
-
-## Ejemplo en Linux/Mac:
-
+**Linux/Mac:**
+```bash
 export DATABASE_URL=jdbc:postgresql://localhost:5432/jwtdb
 export DATABASE_USERNAME=postgres
 export DATABASE_PASSWORD=admin123

@@ -123,7 +123,7 @@ El proyecto implementa un manejador global de excepciones personalizadas usando 
 ---
 ## 🔄 Flujo de Autenticación
 
-### 🛡️ Security Filter Chain
+## 🛡️ Security Filter Chain
 
  **Filtros Principales**
 1. ***Filter 1*** - Filtro inicial de seguridad
@@ -133,7 +133,7 @@ El proyecto implementa un manejador global de excepciones personalizadas usando 
 5. ***3x4T7kev0idubcter*** - Filtro de identificación de usuario
 6. ***3x4T7kev6lavorcter*** - Filtro de autorización de recursos
 
-### Componentes Centrales
+## Componentes Centrales
 
 **ActiveFixation Manager**
 - ***ActiveFixation Provider***
@@ -152,7 +152,7 @@ El proyecto implementa un manejador global de excepciones personalizadas usando 
   - Validación de fingerprints
   - Protección contra replay attacks
 
-### 🗃️ Capa de Datos
+## 🗃️ Capa de Datos
 
 **Database Security**
 - Encriptación de credenciales (BCrypt)

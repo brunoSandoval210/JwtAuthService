@@ -26,7 +26,7 @@ public class Role extends Maintenance implements Serializable {
     @Column(name = "role_name",unique = true)
     private String role;
 
-    @Size(max = 100, message = "La descripción no puede exceder los 100 caracteres")
+    @Size(max = 100)
     private String description;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

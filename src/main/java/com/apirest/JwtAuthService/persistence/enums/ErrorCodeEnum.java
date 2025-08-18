@@ -18,6 +18,7 @@ public enum ErrorCodeEnum {
     INSUFFICIENT_PERMISSIONS(1007, "No tienes los permisos requeridos para esta acción", HttpStatus.FORBIDDEN),
     AUTHENTICATION_FAILED(1008, "Falló la autenticación", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1009, "No autenticado", HttpStatus.UNAUTHORIZED),
+    TOKEN_MISSING(1010, "Token no proporcionado en la cabecera Authorization", HttpStatus.UNAUTHORIZED),
 
 
     // Errores de validación
@@ -28,6 +29,13 @@ public enum ErrorCodeEnum {
     // Errores de servicio
     USER_DELETION_FAILED(3001, "Error al eliminar usuario", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_CREATION_FAILED(3002, "Error al crear usuario", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    RESOURCE_NOT_FOUND(3003, "Recurso no encontrado", HttpStatus.NOT_FOUND),
+    RESOURCE_ALREADY_EXISTS(3004, "El recurso ya existe", HttpStatus.CONFLICT),
+
+    PERMISSION_NOT_FOUND(3010, "Permiso no encontrado", HttpStatus.NOT_FOUND),
+    PERMISSION_ALREADY_EXISTS(3011, "El permiso ya existe", HttpStatus.CONFLICT),
+
 
     // Errores internos
     INTERNAL_SERVER_ERROR(5000, "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);

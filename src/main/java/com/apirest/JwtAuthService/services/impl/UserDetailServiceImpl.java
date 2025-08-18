@@ -34,7 +34,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         user.getRoles().stream()
                 .flatMap(role -> role.getPermissions().stream())
                 .forEach(permission ->
-                        authorityList.add(new SimpleGrantedAuthority(permission.getPermissionName())));
+                        authorityList.add(new SimpleGrantedAuthority(permission.getName())));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),

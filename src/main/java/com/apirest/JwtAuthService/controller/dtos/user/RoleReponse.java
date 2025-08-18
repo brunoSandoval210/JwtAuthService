@@ -4,6 +4,6 @@ import java.util.List;
 
 public record RoleReponse(
         String name,
-        List<PermissionResponse> permissions
+        List<PermissionRoleUserResponse> permissions
 ) {
 }

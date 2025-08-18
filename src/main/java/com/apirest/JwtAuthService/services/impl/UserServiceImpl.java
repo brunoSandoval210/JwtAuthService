@@ -149,7 +149,10 @@ public class UserServiceImpl implements UserService {
                         .map(role -> new RoleReponse(
                                 role.getRole(),
                                 role.getPermissions().stream()
-                                        .map(permission -> new PermissionResponse(permission.getPermissionName()))
+                                        .map(permission -> new PermissionRoleUserResponse(
+                                                permission.getPermissionId(),
+                                                permission.getName(),
+                                                permission.getDescription()))
                                         .toList()
                         ))
                         .toList()

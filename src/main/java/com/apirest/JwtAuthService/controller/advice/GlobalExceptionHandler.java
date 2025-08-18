@@ -65,9 +65,9 @@ public class GlobalExceptionHandler {
     private HttpStatus determineHttpStatus(ErrorCodeEnum errorCode) {
         return switch (errorCode) {
             case ACCESS_DENIED -> HttpStatus.FORBIDDEN;
-            case INVALID_TOKEN, EXPIRED_TOKEN, BAD_CREDENTIALS -> HttpStatus.UNAUTHORIZED;
-            case USER_NOT_FOUND, INVALID_ROLES -> HttpStatus.NOT_FOUND;
-            case USER_ALREADY_EXISTS -> HttpStatus.CONFLICT;
+            case INVALID_TOKEN, EXPIRED_TOKEN, BAD_CREDENTIALS, TOKEN_MISSING -> HttpStatus.UNAUTHORIZED;
+            case USER_NOT_FOUND, INVALID_ROLES, RESOURCE_NOT_FOUND,PERMISSION_NOT_FOUND -> HttpStatus.NOT_FOUND;
+            case USER_ALREADY_EXISTS,RESOURCE_ALREADY_EXISTS,PERMISSION_ALREADY_EXISTS -> HttpStatus.CONFLICT;
             case INVALID_REQUEST, MISSING_REQUIRED_FIELDS -> HttpStatus.BAD_REQUEST;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         };

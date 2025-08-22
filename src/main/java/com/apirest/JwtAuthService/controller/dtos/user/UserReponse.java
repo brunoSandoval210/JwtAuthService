@@ -8,7 +8,7 @@ public record UserReponse(
         boolean accountNoExpired,
         boolean accountNonLocked,
         boolean credentialsNonExpired,
-        List<RoleReponse> roles
+        List<RoleUserReponse> roles
 ) {
 
 }

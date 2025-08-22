@@ -1,13 +1,18 @@
 package com.apirest.JwtAuthService.controller.rest;
 
-import com.apirest.JwtAuthService.controller.dtos.Permission.PermissionCreateRequest;
-import com.apirest.JwtAuthService.controller.dtos.Permission.PermissionResponse;
-import com.apirest.JwtAuthService.controller.dtos.Permission.PermissionUpdateRequest;
+import com.apirest.JwtAuthService.controller.dtos.permission.PermissionCreateRequest;
+import com.apirest.JwtAuthService.controller.dtos.permission.PermissionResponse;
+import com.apirest.JwtAuthService.controller.dtos.permission.PermissionUpdateRequest;
 import com.apirest.JwtAuthService.services.interfaces.PermissionService;
+import com.apirest.JwtAuthService.util.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -32,8 +37,19 @@ public class PermissionController {
             description = "Endpoint para obtener todos los permisos. Requiere rol ADMIN y permiso de leer."
     )
     @PreAuthorize("hasAnyRole('ADMIN') and hasAuthority('READ')")
-    public ResponseEntity<List<PermissionResponse>> getAllPermissions() {
-        return ResponseEntity.ok(permissionService.getAll());
+    public ResponseEntity<PageResponse<PermissionResponse>> getAllPermissions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "asc") String order
+    ) {
+        Sort sort = order.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return ResponseEntity.ok(permissionService.getAll(pageable));
     }
 
     @PostMapping

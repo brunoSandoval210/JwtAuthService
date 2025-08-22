@@ -10,14 +10,14 @@ import com.apirest.JwtAuthService.persistence.repository.ResourceRepository;
 import com.apirest.JwtAuthService.services.exception.ResourceException;
 import com.apirest.JwtAuthService.services.interfaces.ResourceService;
 import com.apirest.JwtAuthService.util.CustomMapper;
+import com.apirest.JwtAuthService.util.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +28,9 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<ResourceResponse> getAll() {
-        List<Resource> resources = resourceRepository.findAll();
-        return resources.stream().map(mapper::entityResourceToDto)
-                .collect(Collectors.toList());
+    public PageResponse<ResourceResponse> getAll(Pageable pageable) {
+        return mapper.toPageResponse(resourceRepository.findAll(pageable)
+                .map(mapper::entityResourceToDto));
     }
 
     @Transactional(readOnly = true)
@@ -74,5 +73,12 @@ public class ResourceServiceImpl implements ResourceService {
         resource.setUpdatedAt(LocalDateTime.now());
 
         return mapper.entityResourceToDto(resourceRepository.save(resource));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public ResourceResponse getById(Long id) {
+        return mapper.entityResourceToDto(resourceRepository.findById(id).orElseThrow(
+                () -> new ResourceException(ErrorCodeEnum.RESOURCE_NOT_FOUND)));
     }
 }

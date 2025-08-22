@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
                 user.isAccountNonLocked(),
                 user.isCredentialsNonExpired(),
                 user.getRoles().stream()
-                        .map(role -> new RoleReponse(
+                        .map(role -> new RoleUserReponse(
                                 role.getRole(),
                                 role.getPermissions().stream()
                                         .map(permission -> new PermissionRoleUserResponse(

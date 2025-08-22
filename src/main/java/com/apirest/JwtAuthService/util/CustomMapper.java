@@ -1,31 +1,99 @@
 package com.apirest.JwtAuthService.util;
 
-import com.apirest.JwtAuthService.controller.dtos.Permission.PermissionCreateRequest;
-import com.apirest.JwtAuthService.controller.dtos.Permission.PermissionResponse;
-import com.apirest.JwtAuthService.controller.dtos.Permission.PermissionUpdateRequest;
-import com.apirest.JwtAuthService.controller.dtos.Permission.ResourcePermissionResponse;
+import com.apirest.JwtAuthService.controller.dtos.permission.PermissionCreateRequest;
+import com.apirest.JwtAuthService.controller.dtos.permission.PermissionResponse;
+import com.apirest.JwtAuthService.controller.dtos.permission.PermissionUpdateRequest;
+import com.apirest.JwtAuthService.controller.dtos.permission.ResourcePermissionResponse;
 import com.apirest.JwtAuthService.controller.dtos.resource.ResourceCreateRequest;
 import com.apirest.JwtAuthService.controller.dtos.resource.ResourceResponse;
 import com.apirest.JwtAuthService.controller.dtos.resource.ResourceUpdateRequest;
+import com.apirest.JwtAuthService.controller.dtos.role.PermissionsRoleResponse;
+import com.apirest.JwtAuthService.controller.dtos.role.RoleCreateRequest;
+import com.apirest.JwtAuthService.controller.dtos.role.RoleResponse;
+import com.apirest.JwtAuthService.controller.dtos.role.RoleUpdateRequest;
 import com.apirest.JwtAuthService.controller.dtos.user.PermissionRoleUserResponse;
 import com.apirest.JwtAuthService.persistence.entity.Permission;
 import com.apirest.JwtAuthService.persistence.entity.Resource;
+import com.apirest.JwtAuthService.persistence.entity.Role;
 import com.apirest.JwtAuthService.persistence.enums.Status;
 import com.apirest.JwtAuthService.services.exception.MissingTokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class CustomMapper {
 
     private final JwtUtils jwtUtils;
+
+    //Role
+    public RoleResponse entityRoleToDto(Role role){
+        return new RoleResponse(
+                role.getRoleId(),
+                role.getRole(),
+                role.getDescription(),
+                role.getPermissions().stream()
+                    .map(permission -> new PermissionsRoleResponse(
+                            permission.getPermissionId(),
+                            permission.getName(),
+                            permission.getDescription()
+                    )).toList(),
+                role.getUsuReg(),
+                role.getUsuMod(),
+                role.getCreatedAt(),
+                role.getUpdatedAt()
+        );
+    }
+
+    public <T> PageResponse<T> toPageResponse(Page<T> page){
+        return new PageResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isFirst(),
+                page.isLast()
+        );
+    }
+
+    public Role dtoToEntityRole (RoleCreateRequest roleCreateRequest, List<Permission> permissions, HttpServletRequest request){
+        return Role.builder()
+                .role(roleCreateRequest.role())
+                .description(roleCreateRequest.description())
+                .permissions(
+                        permissions.stream()
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toSet()))
+                .status(Status.ACTIVO)
+                .usuReg(getUserFromRequest(request))
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    public Role dtoToUpdateEntityRole (Role role, RoleUpdateRequest roleUpdateRequest, HttpServletRequest request){
+        if (roleUpdateRequest.role() != null && !role.getRole().equals(roleUpdateRequest.role())) {
+            role.setRole(roleUpdateRequest.role());
+        }
+        if (roleUpdateRequest.description() != null && !role.getDescription().equals(roleUpdateRequest.description())) {
+            role.setDescription(roleUpdateRequest.description());
+        }
+
+        role.setUsuMod(getUserFromRequest(request));
+        role.setUpdatedAt(LocalDateTime.now());
+
+        return role;
+    }
 
     //Resource
     public ResourceResponse entityResourceToDto(Resource resource) {

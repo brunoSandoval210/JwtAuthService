@@ -1,10 +1,8 @@
 package com.apirest.JwtAuthService.controller.dtos.resource;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-@Valid
 public record ResourceCreateRequest(
         @NotBlank(message = "El nombre no puede estar vacío")
         String name,

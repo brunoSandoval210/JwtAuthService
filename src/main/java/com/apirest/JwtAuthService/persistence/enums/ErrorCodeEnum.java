@@ -30,12 +30,15 @@ public enum ErrorCodeEnum {
     USER_DELETION_FAILED(3001, "Error al eliminar usuario", HttpStatus.INTERNAL_SERVER_ERROR),
     USER_CREATION_FAILED(3002, "Error al crear usuario", HttpStatus.INTERNAL_SERVER_ERROR),
 
-    RESOURCE_NOT_FOUND(3003, "Recurso no encontrado", HttpStatus.NOT_FOUND),
-    RESOURCE_ALREADY_EXISTS(3004, "El recurso ya existe", HttpStatus.CONFLICT),
+    RESOURCE_NOT_FOUND(3010, "Recurso no encontrado", HttpStatus.NOT_FOUND),
+    RESOURCE_ALREADY_EXISTS(3011, "El recurso ya existe", HttpStatus.CONFLICT),
 
-    PERMISSION_NOT_FOUND(3010, "Permiso no encontrado", HttpStatus.NOT_FOUND),
-    PERMISSION_ALREADY_EXISTS(3011, "El permiso ya existe", HttpStatus.CONFLICT),
+    PERMISSION_NOT_FOUND(3020, "Permiso no encontrado", HttpStatus.NOT_FOUND),
+    PERMISSION_ALREADY_EXISTS(3021, "El permiso ya existe", HttpStatus.CONFLICT),
+    PERMISSIONS_NOT_FOUND(3022, "Permisos no encontrados", HttpStatus.NOT_FOUND),
 
+    ROLE_NOT_FOUND(3030, "Rol no encontrado", HttpStatus.NOT_FOUND),
+    ROLE_ALREADY_EXISTS(3031, "El rol ya existe", HttpStatus.CONFLICT),
 
     // Errores internos
     INTERNAL_SERVER_ERROR(5000, "Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR);

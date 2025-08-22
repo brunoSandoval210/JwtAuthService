@@ -1,4 +1,4 @@
-package com.apirest.JwtAuthService.controller.dtos.Permission;
+package com.apirest.JwtAuthService.controller.dtos.permission;
 
 import java.time.LocalDateTime;
 

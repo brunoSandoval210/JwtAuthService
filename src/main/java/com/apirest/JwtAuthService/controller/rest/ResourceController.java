@@ -4,10 +4,15 @@ import com.apirest.JwtAuthService.controller.dtos.resource.ResourceCreateRequest
 import com.apirest.JwtAuthService.controller.dtos.resource.ResourceResponse;
 import com.apirest.JwtAuthService.controller.dtos.resource.ResourceUpdateRequest;
 import com.apirest.JwtAuthService.services.interfaces.ResourceService;
+import com.apirest.JwtAuthService.util.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -31,8 +36,19 @@ public class ResourceController {
     )
     @GetMapping("/all")
     @PreAuthorize("hasAnyRole('ADMIN') and hasAuthority('READ')")
-    public ResponseEntity<List<ResourceResponse>> getAllResources() {
-        return ResponseEntity.ok(resourceService.getAll());
+    public ResponseEntity<PageResponse<ResourceResponse>> getAllResources(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "asc") String order
+    ) {
+        Sort sort = order.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return ResponseEntity.ok(resourceService.getAll(pageable));
     }
 
     @Operation(
@@ -61,7 +77,8 @@ public class ResourceController {
     )
     @PreAuthorize("hasAnyRole('ADMIN') and hasAuthority('UPDATE')")
     @PutMapping("/{resourceId}")
-    public ResponseEntity<ResourceResponse> updateResource(@PathVariable Long resourceId, @RequestBody @Validated ResourceUpdateRequest resourceUpdateRequest, HttpServletRequest request) {
+    public ResponseEntity<ResourceResponse> updateResource(@PathVariable Long resourceId,
+                                                           @RequestBody @Validated ResourceUpdateRequest resourceUpdateRequest, HttpServletRequest request) {
         return ResponseEntity.ok(resourceService.update(resourceId, resourceUpdateRequest, request));
     }
 

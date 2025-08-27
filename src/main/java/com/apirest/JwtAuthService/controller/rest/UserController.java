@@ -4,10 +4,14 @@ import com.apirest.JwtAuthService.controller.dtos.user.UserCreateRequest;
 import com.apirest.JwtAuthService.controller.dtos.user.UserReponse;
 import com.apirest.JwtAuthService.controller.dtos.user.UserUpdateRequest;
 import com.apirest.JwtAuthService.services.interfaces.UserService;
+import com.apirest.JwtAuthService.util.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,19 +34,30 @@ public class UserController {
     )
     @GetMapping("/all")
     @PreAuthorize("hasAnyRole('ADMIN','USER') and hasAuthority('READ')")
-    public ResponseEntity<List<UserReponse>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<PageResponse<UserReponse>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "asc") String order
+    ) {
+        Sort sort = order.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return ResponseEntity.ok(userService.getAll(pageable));
     }
 
-    @Operation(
-            summary = "Buscar usuario por nombre de usuario",
-            description = "Endpoint para buscar un usuario por su nombre de usuario. Requiere rol ADMIN o USER y permiso de leer."
-    )
-    @PreAuthorize(("hasAnyRole('ADMIN','USER') and hasAuthority('READ')"))
-    @GetMapping("/{username}")
-    public ResponseEntity<UserReponse> getFindByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(userService.getFindByUsername(username));
-    }
+//    @Operation(
+//            summary = "Buscar usuario por nombre de usuario",
+//            description = "Endpoint para buscar un usuario por su nombre de usuario. Requiere rol ADMIN o USER y permiso de leer."
+//    )
+//    @PreAuthorize(("hasAnyRole('ADMIN','USER') and hasAuthority('READ')"))
+//    @GetMapping("/{username}")
+//    public ResponseEntity<UserReponse> getFindByUsername(@PathVariable String username) {
+//        return ResponseEntity.ok(userService.getFindByUsername(username));
+//    }
 
     @Operation(
             summary = "Guardar un nuevo usuario",
@@ -51,7 +66,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') and hasAuthority('CREATE')")
     @PostMapping
     public ResponseEntity<UserReponse> saveUser(@RequestBody UserCreateRequest userCreateRequest, HttpServletRequest request) {
-        return ResponseEntity.ok(userService.saveUser(userCreateRequest,request));
+        return ResponseEntity.ok(userService.save(userCreateRequest,request));
     }
 
     @Operation(
@@ -63,7 +78,7 @@ public class UserController {
     public ResponseEntity<UserReponse> updateUser(@PathVariable Long userId,
                                                   @RequestBody UserUpdateRequest userUpdateRequest,
                                                   HttpServletRequest request) {
-        return ResponseEntity.ok(userService.updateUser(userId,userUpdateRequest,request));
+        return ResponseEntity.ok(userService.update(userId,userUpdateRequest,request));
     }
 
     @Operation(
@@ -71,8 +86,9 @@ public class UserController {
             description = "Endpoint para eliminar un usuario por su nombre de usuario. Requiere rol ADMIN y permiso de eliminar."
     )
     @PreAuthorize("hasRole('ADMIN') and hasAuthority('DELETE')")
-    @DeleteMapping("/{username}")
-    public ResponseEntity<String> deleteUser(@PathVariable String username) {
-        return ResponseEntity.ok(userService.deleteUser(username));
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<UserReponse> deleteUser(@PathVariable Long userId,
+                                             HttpServletRequest request) {
+        return ResponseEntity.ok(userService.delete(userId,request));
     }
 }

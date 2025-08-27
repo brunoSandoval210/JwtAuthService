@@ -11,16 +11,18 @@ import com.apirest.JwtAuthService.controller.dtos.role.PermissionsRoleResponse;
 import com.apirest.JwtAuthService.controller.dtos.role.RoleCreateRequest;
 import com.apirest.JwtAuthService.controller.dtos.role.RoleResponse;
 import com.apirest.JwtAuthService.controller.dtos.role.RoleUpdateRequest;
-import com.apirest.JwtAuthService.controller.dtos.user.PermissionRoleUserResponse;
+import com.apirest.JwtAuthService.controller.dtos.user.*;
 import com.apirest.JwtAuthService.persistence.entity.Permission;
 import com.apirest.JwtAuthService.persistence.entity.Resource;
 import com.apirest.JwtAuthService.persistence.entity.Role;
+import com.apirest.JwtAuthService.persistence.entity.User;
 import com.apirest.JwtAuthService.persistence.enums.Status;
 import com.apirest.JwtAuthService.services.exception.MissingTokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -35,6 +37,66 @@ import java.util.stream.Collectors;
 public class CustomMapper {
 
     private final JwtUtils jwtUtils;
+    private final PasswordEncoder passwordEncoder;
+
+    public <T> PageResponse<T> toPageResponse(Page<T> page){
+        return new PageResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isFirst(),
+                page.isLast()
+        );
+    }
+
+    //User
+    public UserReponse entityUserToDto(User user){
+        return new UserReponse(
+                user.getUserId(),
+                user.getUsername(),
+                user.isEnabled(),
+                user.isAccountNoExpired(),
+                user.isAccountNonLocked(),
+                user.isCredentialsNonExpired(),
+                user.getRoles()
+                        .stream()
+                        .map(role -> new RoleUserReponse(
+                                role.getRoleId(),
+                                role.getRole(),
+                                role.getPermissions()
+                                        .stream()
+                                        .map(permission -> new PermissionRoleUserResponse(
+                                                permission.getPermissionId(),
+                                                permission.getName(),
+                                                permission.getDescription()
+                                        )).toList()
+                        )).toList()
+        );
+    }
+
+    public User dtoToEntityUser(UserCreateRequest userCreateRequest, List<Role> roles, HttpServletRequest request){
+        return User.builder()
+                .username(userCreateRequest.username())
+                .password(passwordEncoder.encode(userCreateRequest.password()))
+                .roles(roles
+                        .stream()
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet()))
+                .isEnabled(true)
+                .accountNoExpired(true)
+                .accountNonLocked(true)
+                .credentialsNonExpired(true)
+                .usuReg(getUserFromRequest(request))
+                .createdAt(LocalDateTime.now())
+                .status(Status.ACTIVO)
+                .build();
+    }
+
+    public User dtoToUpdateEntityUser(User user, UserUpdateRequest userUpdateRequest, HttpServletRequest request){
+        return null;
+    }
 
     //Role
     public RoleResponse entityRoleToDto(Role role){
@@ -52,18 +114,6 @@ public class CustomMapper {
                 role.getUsuMod(),
                 role.getCreatedAt(),
                 role.getUpdatedAt()
-        );
-    }
-
-    public <T> PageResponse<T> toPageResponse(Page<T> page){
-        return new PageResponse<>(
-                page.getContent(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.isFirst(),
-                page.isLast()
         );
     }
 

@@ -61,11 +61,7 @@ public class RoleServiceImpl implements RoleService {
             throw new RoleException(ErrorCodeEnum.ROLE_ALREADY_EXISTS);
         }
 
-        List<Permission> permissions = permissionRepository.findByPermissionIdIn(roleCreateRequest.permissions()
-                .stream()
-                .map(PermissionsRoleCreate::permissionId)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList()));
+        List<Permission> permissions = permissionRepository.findByPermissionIdIn(roleCreateRequest.permissions().permissionId());
 
         if (permissions.isEmpty()) {
             throw new PermissionException(ErrorCodeEnum.PERMISSIONS_NOT_FOUND);
@@ -84,18 +80,15 @@ public class RoleServiceImpl implements RoleService {
 
         role = mapper.dtoToUpdateEntityRole(role, roleUpdateRequest, request);
 
-        //Actualizar permisos
         Set<Long> currentPermissionIds = role.getPermissions().stream()
                 .map(Permission::getPermissionId)
                 .collect(Collectors.toSet());
 
-        // permisos solicitados
-        Set<Long> requestedPermissionIds = roleUpdateRequest.permissions().stream()
-                .map(PermissionsRoleCreate::permissionId)
+        Set<Long> requestedPermissionIds = roleUpdateRequest.permissions().permissionId()
+                .stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        // calcular diferencias
         Set<Long> toAdd = new HashSet<>(requestedPermissionIds);
         toAdd.removeAll(currentPermissionIds);
 

@@ -7,26 +7,20 @@ import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
 import com.apirest.JwtAuthService.persistence.enums.Status;
 import com.apirest.JwtAuthService.persistence.repository.RoleRepository;
 import com.apirest.JwtAuthService.persistence.repository.UserRepository;
-import com.apirest.JwtAuthService.services.exception.ApiException;
-import com.apirest.JwtAuthService.services.exception.InvalidRolesException;
-import com.apirest.JwtAuthService.services.exception.UserAlreadyExistsException;
-import com.apirest.JwtAuthService.services.exception.UserNotFoundException;
+import com.apirest.JwtAuthService.services.exception.RoleException;
+import com.apirest.JwtAuthService.services.exception.UserException;
 import com.apirest.JwtAuthService.services.interfaces.UserService;
-import com.apirest.JwtAuthService.util.JwtUtils;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
+import com.apirest.JwtAuthService.util.CustomMapper;
+import com.apirest.JwtAuthService.util.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,128 +28,91 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final JwtUtils jwtUtils;
-    private final PasswordEncoder passwordEncoder;
+    private final CustomMapper mapper;
 
     @Transactional(readOnly = true)
     @Override
-    public List<UserReponse> getAllUsers() {
-        List<UserReponse> userReponseList = new ArrayList<>();
-        userRepository.findAll().forEach(user -> {
-            UserReponse userReponse = buildUserResponse(user);
-            userReponseList.add(userReponse);
-        });
-        return userReponseList;
+    public PageResponse<UserReponse> getAll(Pageable pageable) {
+        return mapper.toPageResponse(userRepository.findAll(pageable)
+                .map(mapper::entityUserToDto));
+    }
+
+    @Override
+    public UserReponse getBy(String s) {
+        return null;
     }
 
     @Transactional(readOnly = true)
     @Override
-    public UserReponse getFindByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException(username));
-        return buildUserResponse(user);
+    public UserReponse getById(Long id) {
+        return mapper.entityUserToDto(userRepository.findById(id)
+                .orElseThrow(() -> new UserException(ErrorCodeEnum.USER_NOT_FOUND)));
     }
 
     @Transactional
     @Override
-    public UserReponse saveUser(UserCreateRequest userCreateRequest, HttpServletRequest request) {
-
+    public UserReponse save(UserCreateRequest userCreateRequest, HttpServletRequest request) {
         if (userRepository.existsByUsername(userCreateRequest.username())){
-            throw new UserAlreadyExistsException(userCreateRequest.username());
+            throw new UserException(ErrorCodeEnum.USER_ALREADY_EXISTS);
         }
 
-        List<String> roleRequest = userCreateRequest.roleCreateRequest().roleNames();
-        Set<Role> roles = new HashSet<>(roleRepository.findByRoleIn(roleRequest));
+        List<Role> roles = roleRepository.findByRoleIdIn(userCreateRequest.roleCreateRequest().roleIds());
 
         if (roles.isEmpty()){
-            throw new InvalidRolesException();
+            throw new RoleException(ErrorCodeEnum.INVALID_ROLES);
         }
 
-        Jws<Claims> validate = jwtUtils.validateToken((request.getHeader(HttpHeaders.AUTHORIZATION)).substring(7));
-        String userCreate=jwtUtils.getUsernameFromToken(validate);
+        User user = mapper.dtoToEntityUser(userCreateRequest,roles,request);
 
-        User user = User.builder()
-                .username(userCreateRequest.username())
-                .password(passwordEncoder.encode(userCreateRequest.password()))
-                .roles(roles)
-                .isEnabled(true)
-                .accountNoExpired(true)
-                .accountNonLocked(true)
-                .credentialsNonExpired(true)
-                .usuReg(userCreate)
-                .createdAt(LocalDateTime.now())
-                .status(Status.ACTIVO)
-                .build();
-
-        user = userRepository.save(user);
-
-        return buildUserResponse(user);
+        return mapper.entityUserToDto(userRepository.save(user));
     }
 
     @Transactional
     @Override
-    public UserReponse updateUser(Long userId, UserUpdateRequest userUpdateRequest, HttpServletRequest request) {
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserNotFoundException("Usuario con el id " + userId + " no encontrado"));
+    public UserReponse update(Long aLong, UserUpdateRequest userUpdateRequest, HttpServletRequest request) {
+        User user = userRepository.findById(aLong)
+                .orElseThrow(() -> new UserException(ErrorCodeEnum.USER_NOT_FOUND));
 
-        Jws<Claims> validate = jwtUtils.validateToken((request.getHeader(HttpHeaders.AUTHORIZATION)).substring(7));
-        String userUpdate = jwtUtils.getUsernameFromToken(validate);
+        user = mapper.dtoToUpdateEntityUser(user, userUpdateRequest, request);
 
-        Set<Role> roles = new HashSet<>();
-        if (userUpdateRequest.roleCreateRequest() != null && !userUpdateRequest.roleCreateRequest().roleNames().isEmpty()) {
-            roles = new HashSet<>(roleRepository.findByRoleIn(userUpdateRequest.roleCreateRequest().roleNames()));
-            if (roles.isEmpty()) {
-                throw new InvalidRolesException();
-            }
+        Set<Long> currentRoleIds = user.getRoles().stream()
+                .map(Role::getRoleId)
+                .collect(Collectors.toSet());
+
+        Set<Long> requestedRoleIds = userUpdateRequest.roleCreateRequest().roleIds()
+                .stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        Set<Long> toAdd = new HashSet<>(requestedRoleIds);
+        toAdd.removeAll(currentRoleIds);
+
+        Set<Long> toRemove = new HashSet<>(currentRoleIds);
+        toRemove.removeAll(requestedRoleIds);
+
+        if (!toAdd.isEmpty()){
+            List<Role> rolesToAdd = roleRepository.findByRoleIdIn(new ArrayList<>(toAdd));
+            user.getRoles().addAll(rolesToAdd);
         }
 
-        if (userUpdateRequest.password() != null) {
-            user.setPassword(passwordEncoder.encode(userUpdateRequest.password()));
-        }
-        if (!roles.isEmpty()) {
-            user.setRoles(roles);
+        if (!toRemove.isEmpty()){
+            user.getRoles().removeIf( r -> toRemove.contains(r.getRoleId()));
         }
 
+        return mapper.entityUserToDto(userRepository.save(user));
+    }
+
+    @Transactional
+    @Override
+    public UserReponse delete(Long aLong, HttpServletRequest request) {
+        User user = userRepository.findById(aLong)
+                .orElseThrow(() -> new UserException(ErrorCodeEnum.USER_NOT_FOUND));
+
+        user.setStatus(user.getStatus() == Status.ACTIVO ? Status.INACTIVO : Status.ACTIVO);
+        user.setUsuMod(mapper.getUserFromRequest(request));
         user.setUpdatedAt(LocalDateTime.now());
-        user.setUsuMod(userUpdate);
 
-        user = userRepository.save(user);
-
-        return buildUserResponse(user);
+        return mapper.entityUserToDto(userRepository.save(user));
     }
 
-    @Transactional
-    @Override
-    public String deleteUser(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException(username));
-        userRepository.delete(user);
-
-        if (userRepository.existsByUsername(username)) {
-            throw new ApiException(ErrorCodeEnum.USER_DELETION_FAILED);
-        }
-        return "Usuario " + username + " eliminado correctamente";
-    }
-
-    // Método reutilizable para construir UserReponse
-    private UserReponse buildUserResponse(User user) {
-        return new UserReponse(
-                user.getUsername(),
-                user.isEnabled(),
-                user.isAccountNoExpired(),
-                user.isAccountNonLocked(),
-                user.isCredentialsNonExpired(),
-                user.getRoles().stream()
-                        .map(role -> new RoleUserReponse(
-                                role.getRole(),
-                                role.getPermissions().stream()
-                                        .map(permission -> new PermissionRoleUserResponse(
-                                                permission.getPermissionId(),
-                                                permission.getName(),
-                                                permission.getDescription()))
-                                        .toList()
-                        ))
-                        .toList()
-        );
-    }
 }

@@ -3,7 +3,7 @@ package com.apirest.JwtAuthService.util.filter;
 import com.apirest.JwtAuthService.controller.dtos.auth.AuthLoginRequest;
 import com.apirest.JwtAuthService.controller.dtos.auth.AuthResponse;
 import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
-import com.apirest.JwtAuthService.services.exception.UserNotFoundException;
+import com.apirest.JwtAuthService.services.exception.UserException;
 import com.apirest.JwtAuthService.services.impl.UserDetailServiceImpl;
 import com.apirest.JwtAuthService.util.JwtUtils;
 import com.apirest.JwtAuthService.util.ErrorResponse;
@@ -19,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -65,7 +64,7 @@ public class JwtTokenGenerator extends OncePerRequestFilter {
                     new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
                 } catch (BadCredentialsException e) {
                     sendErrorResponse(response, ErrorCodeEnum.BAD_CREDENTIALS, e.getMessage());
-                } catch (UserNotFoundException e) {
+                } catch (UserException e) {
                     sendErrorResponse(response, ErrorCodeEnum.USER_NOT_FOUND, e.getMessage());
                 } catch (Exception e) {
                     sendErrorResponse(response, ErrorCodeEnum.INTERNAL_SERVER_ERROR, e.getMessage());

@@ -1,6 +1,7 @@
-package com.apirest.JwtAuthService.util;
+package com.apirest.JwtAuthService.auth;
 
 import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
+import com.apirest.JwtAuthService.controller.dtos.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

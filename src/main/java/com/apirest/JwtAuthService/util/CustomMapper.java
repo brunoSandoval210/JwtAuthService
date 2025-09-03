@@ -1,5 +1,6 @@
 package com.apirest.JwtAuthService.util;
 
+import com.apirest.JwtAuthService.auth.JwtUtils;
 import com.apirest.JwtAuthService.controller.dtos.permission.PermissionCreateRequest;
 import com.apirest.JwtAuthService.controller.dtos.permission.PermissionResponse;
 import com.apirest.JwtAuthService.controller.dtos.permission.PermissionUpdateRequest;
@@ -7,6 +8,7 @@ import com.apirest.JwtAuthService.controller.dtos.permission.ResourcePermissionR
 import com.apirest.JwtAuthService.controller.dtos.resource.ResourceCreateRequest;
 import com.apirest.JwtAuthService.controller.dtos.resource.ResourceResponse;
 import com.apirest.JwtAuthService.controller.dtos.resource.ResourceUpdateRequest;
+import com.apirest.JwtAuthService.controller.dtos.response.PageResponse;
 import com.apirest.JwtAuthService.controller.dtos.role.PermissionsRoleResponse;
 import com.apirest.JwtAuthService.controller.dtos.role.RoleCreateRequest;
 import com.apirest.JwtAuthService.controller.dtos.role.RoleResponse;
@@ -29,7 +31,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component

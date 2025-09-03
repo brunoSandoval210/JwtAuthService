@@ -3,7 +3,7 @@ package com.apirest.JwtAuthService.controller.advice;
 import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
 import com.apirest.JwtAuthService.services.exception.ApiException;
 import com.apirest.JwtAuthService.services.exception.InsufficientPermissionsException;
-import com.apirest.JwtAuthService.util.ErrorResponse;
+import com.apirest.JwtAuthService.controller.dtos.response.ErrorResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice

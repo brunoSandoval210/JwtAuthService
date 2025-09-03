@@ -2,20 +2,17 @@ package com.apirest.JwtAuthService.config;
 
 import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
 import com.apirest.JwtAuthService.services.impl.UserDetailServiceImpl;
-import com.apirest.JwtAuthService.util.ErrorResponse;
-import com.apirest.JwtAuthService.util.JwtAuthEntryPoint;
-import com.apirest.JwtAuthService.util.JwtUtils;
+import com.apirest.JwtAuthService.controller.dtos.response.ErrorResponse;
+import com.apirest.JwtAuthService.auth.JwtAuthEntryPoint;
+import com.apirest.JwtAuthService.auth.JwtUtils;
 import com.apirest.JwtAuthService.util.filter.JwtTokenGenerator;
 import com.apirest.JwtAuthService.util.filter.JwtTokenValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -34,9 +31,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map;
 
 @Configuration
 @EnableWebSecurity

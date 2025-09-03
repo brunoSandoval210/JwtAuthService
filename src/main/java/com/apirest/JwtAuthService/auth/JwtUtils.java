@@ -1,4 +1,4 @@
-package com.apirest.JwtAuthService.util;
+package com.apirest.JwtAuthService.auth;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

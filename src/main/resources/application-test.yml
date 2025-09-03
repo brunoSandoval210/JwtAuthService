@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:jwt_users_test
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled: true

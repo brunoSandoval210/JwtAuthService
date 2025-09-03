@@ -1,4 +1,4 @@
-package com.apirest.JwtAuthService.persistence.repository;
+package com.apirest.JwtAuthService.persistence;
 
 import com.apirest.JwtAuthService.persistence.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role,Long> {
-    List<Role> findByRoleIn(List<String> roleNames);
     List<Role> findByRoleIdIn(List<Long> roleIds);
     Optional<Role> findByRole(String roleName);
 }

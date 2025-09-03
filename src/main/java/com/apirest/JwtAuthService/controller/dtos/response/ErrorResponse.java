@@ -1,4 +1,4 @@
-package com.apirest.JwtAuthService.util;
+package com.apirest.JwtAuthService.controller.dtos.response;
 
 public record ErrorResponse (
         String error,

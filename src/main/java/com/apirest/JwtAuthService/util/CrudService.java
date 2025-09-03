@@ -1,5 +1,6 @@
 package com.apirest.JwtAuthService.util;
 
+import com.apirest.JwtAuthService.controller.dtos.response.PageResponse;
 import org.springframework.data.domain.Pageable;
 
 

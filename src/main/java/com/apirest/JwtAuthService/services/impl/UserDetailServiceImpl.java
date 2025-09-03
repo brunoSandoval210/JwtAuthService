@@ -2,7 +2,7 @@ package com.apirest.JwtAuthService.services.impl;
 
 import com.apirest.JwtAuthService.persistence.entity.User;
 import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
-import com.apirest.JwtAuthService.persistence.repository.UserRepository;
+import com.apirest.JwtAuthService.persistence.UserRepository;
 import com.apirest.JwtAuthService.services.exception.UserException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

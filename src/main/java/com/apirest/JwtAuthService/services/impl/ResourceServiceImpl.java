@@ -6,11 +6,11 @@ import com.apirest.JwtAuthService.controller.dtos.resource.ResourceUpdateRequest
 import com.apirest.JwtAuthService.persistence.entity.Resource;
 import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
 import com.apirest.JwtAuthService.persistence.enums.Status;
-import com.apirest.JwtAuthService.persistence.repository.ResourceRepository;
+import com.apirest.JwtAuthService.persistence.ResourceRepository;
 import com.apirest.JwtAuthService.services.exception.ResourceException;
 import com.apirest.JwtAuthService.services.interfaces.ResourceService;
 import com.apirest.JwtAuthService.util.CustomMapper;
-import com.apirest.JwtAuthService.util.PageResponse;
+import com.apirest.JwtAuthService.controller.dtos.response.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

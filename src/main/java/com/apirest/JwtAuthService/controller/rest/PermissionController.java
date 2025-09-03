@@ -4,12 +4,11 @@ import com.apirest.JwtAuthService.controller.dtos.permission.PermissionCreateReq
 import com.apirest.JwtAuthService.controller.dtos.permission.PermissionResponse;
 import com.apirest.JwtAuthService.controller.dtos.permission.PermissionUpdateRequest;
 import com.apirest.JwtAuthService.services.interfaces.PermissionService;
-import com.apirest.JwtAuthService.util.PageResponse;
+import com.apirest.JwtAuthService.controller.dtos.response.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/permissions")

@@ -1,6 +1,6 @@
 package com.apirest.JwtAuthService.util.filter;
 
-import com.apirest.JwtAuthService.util.JwtUtils;
+import com.apirest.JwtAuthService.auth.JwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;

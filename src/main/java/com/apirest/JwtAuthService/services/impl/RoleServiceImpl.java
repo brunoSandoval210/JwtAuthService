@@ -1,6 +1,5 @@
 package com.apirest.JwtAuthService.services.impl;
 
-import com.apirest.JwtAuthService.controller.dtos.role.PermissionsRoleCreate;
 import com.apirest.JwtAuthService.controller.dtos.role.RoleCreateRequest;
 import com.apirest.JwtAuthService.controller.dtos.role.RoleResponse;
 import com.apirest.JwtAuthService.controller.dtos.role.RoleUpdateRequest;
@@ -8,13 +7,13 @@ import com.apirest.JwtAuthService.persistence.entity.Permission;
 import com.apirest.JwtAuthService.persistence.entity.Role;
 import com.apirest.JwtAuthService.persistence.enums.ErrorCodeEnum;
 import com.apirest.JwtAuthService.persistence.enums.Status;
-import com.apirest.JwtAuthService.persistence.repository.PermissionRepository;
-import com.apirest.JwtAuthService.persistence.repository.RoleRepository;
+import com.apirest.JwtAuthService.persistence.PermissionRepository;
+import com.apirest.JwtAuthService.persistence.RoleRepository;
 import com.apirest.JwtAuthService.services.exception.PermissionException;
 import com.apirest.JwtAuthService.services.exception.RoleException;
 import com.apirest.JwtAuthService.services.interfaces.RoleService;
 import com.apirest.JwtAuthService.util.CustomMapper;
-import com.apirest.JwtAuthService.util.PageResponse;
+import com.apirest.JwtAuthService.controller.dtos.response.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

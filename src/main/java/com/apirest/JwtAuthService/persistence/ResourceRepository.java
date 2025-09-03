@@ -1,4 +1,4 @@
-package com.apirest.JwtAuthService.persistence.repository;
+package com.apirest.JwtAuthService.persistence;
 
 import com.apirest.JwtAuthService.persistence.entity.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;

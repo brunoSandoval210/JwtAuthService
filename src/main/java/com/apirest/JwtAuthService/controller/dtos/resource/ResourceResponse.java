@@ -1,6 +1,7 @@
 package com.apirest.JwtAuthService.controller.dtos.resource;
 
 import com.apirest.JwtAuthService.controller.dtos.user.PermissionRoleUserResponse;
+import com.apirest.JwtAuthService.persistence.enums.Status;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +14,7 @@ public record ResourceResponse (
     String usuReg,
     String usuMod,
     LocalDateTime createdAt,
-    LocalDateTime updatedAt
+    LocalDateTime updatedAt,
+    Status status
 ){
 }

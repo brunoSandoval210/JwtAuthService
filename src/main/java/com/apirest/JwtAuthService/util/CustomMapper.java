@@ -161,7 +161,8 @@ public class CustomMapper {
                 resource.getUsuReg(),
                 resource.getUsuMod(),
                 resource.getCreatedAt(),
-                resource.getUpdatedAt()
+                resource.getUpdatedAt(),
+                resource.getStatus()
         );
     }
 

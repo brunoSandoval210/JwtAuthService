@@ -10,6 +10,7 @@ import com.apirest.JwtAuthService.persistence.enums.Status;
 import com.apirest.JwtAuthService.persistence.PermissionRepository;
 import com.apirest.JwtAuthService.persistence.ResourceRepository;
 import com.apirest.JwtAuthService.services.exception.PermissionException;
+import com.apirest.JwtAuthService.services.exception.ResourceException;
 import com.apirest.JwtAuthService.services.interfaces.PermissionService;
 import com.apirest.JwtAuthService.util.CustomMapper;
 import com.apirest.JwtAuthService.controller.dtos.response.PageResponse;
@@ -50,7 +51,7 @@ public class PermissionServiceImpl implements PermissionService {
         }
         if (permissionCreateRequest.resourceId() != null){
              resource = resourceRepository.findById(permissionCreateRequest.resourceId()).orElseThrow(
-                    ()-> new PermissionException(ErrorCodeEnum.RESOURCE_NOT_FOUND));
+                    ()-> new ResourceException(ErrorCodeEnum.RESOURCE_NOT_FOUND));
         }
 
         Permission permission= mapper.dtoToEntityPermission(permissionCreateRequest,resource,request);
@@ -66,7 +67,9 @@ public class PermissionServiceImpl implements PermissionService {
                 ()-> new PermissionException(ErrorCodeEnum.PERMISSION_NOT_FOUND));
 
         if (permissionUpdateRequest.resourceId() != null){
-            resource = resourceRepository.findById(permissionUpdateRequest.resourceId()).orElse(null);
+            resource = resourceRepository.findById(permissionUpdateRequest.resourceId()).orElseThrow(
+                    () -> new ResourceException(ErrorCodeEnum.RESOURCE_NOT_FOUND)
+            );
         }
 
         permission = mapper.dtoToUpdatePermission(permission, permissionUpdateRequest, resource, request);

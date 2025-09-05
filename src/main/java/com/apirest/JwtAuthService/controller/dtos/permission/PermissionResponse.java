@@ -1,5 +1,7 @@
 package com.apirest.JwtAuthService.controller.dtos.permission;
 
+import com.apirest.JwtAuthService.persistence.enums.Status;
+
 import java.time.LocalDateTime;
 
 public record PermissionResponse(
@@ -10,6 +12,7 @@ public record PermissionResponse(
         String usuReg,
         String usuMod,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        Status status
 ) {
 }

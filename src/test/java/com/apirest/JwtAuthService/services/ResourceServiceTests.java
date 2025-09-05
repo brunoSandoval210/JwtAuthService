@@ -41,7 +41,6 @@ public class ResourceServiceTests {
 
     private Resource baseResource;
     private ResourceResponse baseResourceResponse;
-    private ResourceCreateRequest baseResourceCreateRequest;
 
     @BeforeEach
     void setUp() {
@@ -255,6 +254,5 @@ public class ResourceServiceTests {
         verify(resourceRepository,times(1)).findById(2L);
         verify(resourceRepository,never()).save(any(Resource.class));
         verify(mapper,never()).entityResourceToDto(any(Resource.class));
-
     }
 }

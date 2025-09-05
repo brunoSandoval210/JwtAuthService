@@ -206,7 +206,8 @@ public class CustomMapper {
                 permission.getUsuReg(),
                 permission.getUsuMod(),
                 permission.getCreatedAt(),
-                permission.getUpdatedAt()
+                permission.getUpdatedAt(),
+                permission.getStatus()
         );
     }
 

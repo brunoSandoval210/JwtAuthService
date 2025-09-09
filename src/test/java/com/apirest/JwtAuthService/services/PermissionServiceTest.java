@@ -225,7 +225,7 @@ public class PermissionServiceTest {
         assertThrows(PermissionException.class, ()->{
            permissionService.update(2L,permissionUpdateRequest,request);
         });
-        verify(permissionRepository,times(1)).findById(1L);
+        verify(permissionRepository,times(1)).findById(2L);
         verify(resourceRepository,never()).findById(anyLong());
         verify(mapper,never()).dtoToUpdatePermission(any(Permission.class),any(PermissionUpdateRequest.class),any(Resource.class),eq(request));
         verify(permissionRepository,never()).save(any(Permission.class));
@@ -301,7 +301,8 @@ public class PermissionServiceTest {
         assertNotNull(response.usuMod());
 
         verify(permissionRepository,times(1)).findById(1L);
-        verify(mapper,times(1)).entityPermissionToDto(basedPermission);
+        verify(permissionRepository,times(1)).save(deletedPermission);
+        verify(mapper,times(1)).entityPermissionToDto(deletedPermission);
     }
 
     @Test
